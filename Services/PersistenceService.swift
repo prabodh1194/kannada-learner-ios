@@ -7,6 +7,7 @@ class PersistenceService {
     private let lastPracticeDateKey = "LastPracticeDate"
     private let recentlyPracticedKey = "RecentlyPracticed"
     private let dailyGoalKey = "DailyGoal"
+    private let practiceHistoryKey = "PracticeHistory"
     
     func savePhrases(_ phrases: [Phrase]) {
         if let encoded = try? JSONEncoder().encode(phrases) {
@@ -59,6 +60,20 @@ class PersistenceService {
         return userDefaults.integer(forKey: dailyGoalKey) > 0 ? userDefaults.integer(forKey: dailyGoalKey) : 5
     }
     
+    func savePracticeHistory(_ history: [PracticeSession]) {
+        if let encoded = try? JSONEncoder().encode(history) {
+            userDefaults.set(encoded, forKey: practiceHistoryKey)
+        }
+    }
+    
+    func loadPracticeHistory() -> [PracticeSession] {
+        if let data = userDefaults.data(forKey: practiceHistoryKey),
+           let history = try? JSONDecoder().decode([PracticeSession].self, from: data) {
+            return history
+        }
+        return []
+    }
+    
     func exportData() -> Data? {
         var exportDict: [String: Any] = [:]
         
@@ -82,6 +97,12 @@ class PersistenceService {
         
         // Export daily goal
         exportDict["dailyGoal"] = loadDailyGoal()
+        
+        // Export practice history
+        let history = loadPracticeHistory()
+        if let encodedHistory = try? JSONEncoder().encode(history) {
+            exportDict["practiceHistory"] = encodedHistory
+        }
         
         // Encode the export dictionary
         if let encodedData = try? JSONSerialization.data(withJSONObject: exportDict, options: .prettyPrinted) {
@@ -118,6 +139,11 @@ class PersistenceService {
                 // Import daily goal
                 if let dailyGoal = exportDict["dailyGoal"] as? Int {
                     userDefaults.set(dailyGoal, forKey: dailyGoalKey)
+                }
+                
+                // Import practice history
+                if let historyData = exportDict["practiceHistory"] as? Data {
+                    userDefaults.set(historyData, forKey: practiceHistoryKey)
                 }
                 
                 return true

@@ -4,14 +4,18 @@ class PhraseService: ObservableObject {
     @Published var phrases: [Phrase] = []
     @Published var currentStreak: Int = 0
     @Published var dailyGoal: Int = 5
+    @Published var practiceHistory: [PracticeSession] = []
     private let persistenceService = PersistenceService()
     private var recentlyPracticedIds: [String] = []
+    private var sessionStartDate: Date?
+    private var sessionPhrasesPracticed: Int = 0
     
     init() {
         loadPhrases()
         loadStreak()
         loadRecentlyPracticed()
         loadDailyGoal()
+        loadPracticeHistory()
     }
     
     func loadPhrases() {
@@ -55,6 +59,46 @@ class PhraseService: ObservableObject {
     
     func saveDailyGoal() {
         persistenceService.saveDailyGoal(dailyGoal)
+    }
+    
+    func loadPracticeHistory() {
+        practiceHistory = persistenceService.loadPracticeHistory()
+    }
+    
+    func savePracticeHistory() {
+        persistenceService.savePracticeHistory(practiceHistory)
+    }
+    
+    func startPracticeSession() {
+        sessionStartDate = Date()
+        sessionPhrasesPracticed = 0
+    }
+    
+    func endPracticeSession() {
+        guard let startDate = sessionStartDate else { return }
+        
+        let duration = Date().timeIntervalSince(startDate)
+        
+        // Count mastery levels for this session
+        var masteryCounts: [String: Int] = [:]
+        for phrase in phrases {
+            let count = masteryCounts[phrase.masteryLevel.rawValue, default: 0] + 1
+            masteryCounts[phrase.masteryLevel.rawValue] = count
+        }
+        
+        let session = PracticeSession(
+            date: startDate,
+            phrasesPracticed: sessionPhrasesPracticed,
+            duration: duration,
+            masteryLevels: masteryCounts
+        )
+        
+        practiceHistory.append(session)
+        savePracticeHistory()
+        
+        // Reset session variables
+        sessionStartDate = nil
+        sessionPhrasesPracticed = 0
     }
     
     func updateStreak() {
@@ -124,6 +168,9 @@ class PhraseService: ObservableObject {
             }
             
             saveRecentlyPracticed()
+            
+            // Increment session phrases practiced
+            sessionPhrasesPracticed += 1
         }
     }
     
@@ -206,6 +253,7 @@ class PhraseService: ObservableObject {
             loadStreak()
             loadRecentlyPracticed()
             loadDailyGoal()
+            loadPracticeHistory()
         }
         return success
     }

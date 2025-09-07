@@ -128,9 +128,15 @@ struct PracticeView: View {
         .onAppear {
             startPractice()
         }
+        .onDisappear {
+            phraseService.endPracticeSession()
+        }
     }
     
     private func startPractice() {
+        // Start a new practice session
+        phraseService.startPracticeSession()
+        
         // Filter out mastered phrases for practice
         phrases = phraseService.phrases.filter { $0.masteryLevel != .mastered }
         
@@ -158,6 +164,7 @@ struct PracticeView: View {
             currentPhrase = phrases[currentIndex]
         } else {
             // Practice session completed
+            phraseService.endPracticeSession()
             startPractice()
             phrasesPracticed = 0
         }
