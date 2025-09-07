@@ -84,9 +84,33 @@ struct SamplePhrases {
             masteryLevel: .new
         ),
         
-        // Shopping
+        // Office Meetings
         Phrase(
             id: UUID(uuidString: "00000000-0000-0000-0000-000000000008")!,
+            kannadaText: "ನಾವು ಮೀಟಿಂಗ್ ಪ್ರಾರಂಭಿಸೋಣ",
+            englishTranslation: "Let's start the meeting",
+            phoneticPronunciation: "Naavu meeting praarambhisona",
+            audioFileName: "naavu_meeting_praarambhisona.mp3",
+            category: .officeMeetings,
+            difficulty: .intermediate,
+            isFavorite: false,
+            masteryLevel: .new
+        ),
+        Phrase(
+            id: UUID(uuidString: "00000000-0000-0000-0000-000000000009")!,
+            kannadaText: "ನಿಮ್ಮ ಅಭಿಪ್ರಾಯ ಏನು?",
+            englishTranslation: "What is your opinion?",
+            phoneticPronunciation: "Nimma abhipraaya enu?",
+            audioFileName: "nimma_abhipraaya_enu.mp3",
+            category: .officeMeetings,
+            difficulty: .intermediate,
+            isFavorite: false,
+            masteryLevel: .new
+        ),
+        
+        // Shopping
+        Phrase(
+            id: UUID(uuidString: "00000000-0000-0000-0000-000000000010")!,
             kannadaText: "ಎಷ್ಟು ಬೆಲೆ?",
             englishTranslation: "How much is the price?",
             phoneticPronunciation: "Eshṭu bele?",
@@ -97,7 +121,7 @@ struct SamplePhrases {
             masteryLevel: .new
         ),
         Phrase(
-            id: UUID(uuidString: "00000000-0000-0000-0000-000000000009")!,
+            id: UUID(uuidString: "00000000-0000-0000-0000-000000000011")!,
             kannadaText: "ಇದನ್ನು ತೋರಿಸಿ",
             englishTranslation: "Show me this",
             phoneticPronunciation: "Idannu torisi",
@@ -107,10 +131,21 @@ struct SamplePhrases {
             isFavorite: false,
             masteryLevel: .new
         ),
+        Phrase(
+            id: UUID(uuidString: "00000000-0000-0000-0000-000000000012")!,
+            kannadaText: "ನಾನು ಇದನ್ನು ಖರೀದಿಸುತ್ತೇನೆ",
+            englishTranslation: "I'll buy this",
+            phoneticPronunciation: "Naanu idannu khareedisuttene",
+            audioFileName: "naanu_idannu_khareedisuttene.mp3",
+            category: .shopping,
+            difficulty: .beginner,
+            isFavorite: false,
+            masteryLevel: .new
+        ),
         
         // Transportation
         Phrase(
-            id: UUID(uuidString: "00000000-0000-0000-0000-000000000010")!,
+            id: UUID(uuidString: "00000000-0000-0000-0000-000000000013")!,
             kannadaText: "ಬಸ್ ಸ್ಟಾಪ್ ಎಲ್ಲಿದೆ?",
             englishTranslation: "Where is the bus stop?",
             phoneticPronunciation: "Bus stop yelliade?",
@@ -121,7 +156,7 @@ struct SamplePhrases {
             masteryLevel: .new
         ),
         Phrase(
-            id: UUID(uuidString: "00000000-0000-0000-0000-000000000011")!,
+            id: UUID(uuidString: "00000000-0000-0000-0000-000000000014")!,
             kannadaText: "ಅಳ್ಳಿಯವರೆಗೆ ಎಷ್ಟು ದೂರ?",
             englishTranslation: "How far is it to the next stop?",
             phoneticPronunciation: "Alliyavarege eshtu doora?",
@@ -131,10 +166,21 @@ struct SamplePhrases {
             isFavorite: false,
             masteryLevel: .new
         ),
+        Phrase(
+            id: UUID(uuidString: "00000000-0000-0000-0000-000000000015")!,
+            kannadaText: "ನಾನು ಸ್ಟೇಶನ್‌ಗೆ ಹೋಗುತ್ತೇನೆ",
+            englishTranslation: "I'm going to the station",
+            phoneticPronunciation: "Naanu stationge hoguttene",
+            audioFileName: "naanu_stationge_hoguttene.mp3",
+            category: .transportation,
+            difficulty: .beginner,
+            isFavorite: false,
+            masteryLevel: .new
+        ),
         
         // Restaurants
         Phrase(
-            id: UUID(uuidString: "00000000-0000-0000-0000-000000000012")!,
+            id: UUID(uuidString: "00000000-0000-0000-0000-000000000016")!,
             kannadaText: "ಮೆನು ತೋರಿಸಿ",
             englishTranslation: "Show me the menu",
             phoneticPronunciation: "Menu torisi",
@@ -145,12 +191,47 @@ struct SamplePhrases {
             masteryLevel: .new
         ),
         Phrase(
-            id: UUID(uuidString: "00000000-0000-0000-0000-000000000013")!,
+            id: UUID(uuidString: "00000000-0000-0000-0000-000000000017")!,
             kannadaText: "ನಾನು ವೆಜಿಟೇರಿಯನ್ ಆಗಿದ್ದೇನೆ",
             englishTranslation: "I am vegetarian",
             phoneticPronunciation: "Naanu vegetarian agiddeene",
             audioFileName: "naanu_vegetarian_agiddeene.mp3",
             category: .restaurants,
+            difficulty: .intermediate,
+            isFavorite: false,
+            masteryLevel: .new
+        ),
+        Phrase(
+            id: UUID(uuidString: "00000000-0000-0000-0000-000000000018")!,
+            kannadaText: "ಬಿಲ್ಲು ತೋರಿಸಿ",
+            englishTranslation: "Show me the bill",
+            phoneticPronunciation: "Billu torisi",
+            audioFileName: "billu_torisi.mp3",
+            category: .restaurants,
+            difficulty: .beginner,
+            isFavorite: false,
+            masteryLevel: .new
+        ),
+        
+        // Directions
+        Phrase(
+            id: UUID(uuidString: "00000000-0000-0000-0000-000000000019")!,
+            kannadaText: "ನಿಮ್ಮ ಹೆಸರು ಏನು?",
+            englishTranslation: "What is your name?",
+            phoneticPronunciation: "Nimma hesaru enu?",
+            audioFileName: "nimma_hesaru_enu.mp3",
+            category: .directions,
+            difficulty: .beginner,
+            isFavorite: false,
+            masteryLevel: .new
+        ),
+        Phrase(
+            id: UUID(uuidString: "00000000-0000-0000-0000-000000000020")!,
+            kannadaText: "ನಾನು ಸ್ವಲ್ಪ ಸಮಯ ಮಾತನಾಡಬಯಸುತ್ತೇನೆ",
+            englishTranslation: "I'd like to speak for a few minutes",
+            phoneticPronunciation: "Naanu swalpa samaya maatanaadaboyasuttene",
+            audioFileName: "naanu_swalpa_samaya_maatanaadaboyasuttene.mp3",
+            category: .directions,
             difficulty: .intermediate,
             isFavorite: false,
             masteryLevel: .new
