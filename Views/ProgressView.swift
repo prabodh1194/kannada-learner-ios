@@ -4,23 +4,27 @@ struct ProgressView: View {
     @ObservedObject var phraseService: PhraseService
     
     var totalPhrases: Int {
-        phraseService.phrases.count
+        phraseService.totalPhrases()
     }
     
     var masteredPhrases: Int {
-        phraseService.phrases.filter { $0.masteryLevel == .mastered }.count
+        phraseService.masteredPhrases()
     }
     
     var learningPhrases: Int {
-        phraseService.phrases.filter { $0.masteryLevel == .learning }.count
+        phraseService.learningPhrases()
     }
     
     var newPhrases: Int {
-        phraseService.phrases.filter { $0.masteryLevel == .new }.count
+        phraseService.newPhrases()
     }
     
     var favoritePhrases: Int {
-        phraseService.favoritePhrases().count
+        phraseService.favoritePhrasesCount()
+    }
+    
+    var masteredPercentage: Double {
+        totalPhrases > 0 ? Double(masteredPhrases) / Double(totalPhrases) * 100 : 0
     }
     
     var body: some View {
@@ -65,6 +69,16 @@ struct ProgressView: View {
                         learning: learningPhrases,
                         new: newPhrases
                     )
+                    
+                    // Progress percentage
+                    HStack {
+                        Text("Mastered:")
+                            .foregroundColor(.textPrimary)
+                        Spacer()
+                        Text("\(masteredPercentage, specifier: "%.1f")%")
+                            .fontWeight(.bold)
+                            .foregroundColor(.neonGreen)
+                    }
                 }
                 
                 // Stats
@@ -103,6 +117,30 @@ struct ProgressView: View {
                         value: favoritePhrases,
                         color: .neonPink
                     )
+                    
+                    // Difficulty breakdown
+                    Text("Phrases by Difficulty")
+                        .font(.headline)
+                        .foregroundColor(.neonBlue)
+                        .padding(.top)
+                    
+                    StatCardView(
+                        title: "Beginner",
+                        value: phraseService.phrasesByDifficulty(.beginner),
+                        color: .neonGreen
+                    )
+                    
+                    StatCardView(
+                        title: "Intermediate",
+                        value: phraseService.phrasesByDifficulty(.intermediate),
+                        color: .neonBlue
+                    )
+                    
+                    StatCardView(
+                        title: "Advanced",
+                        value: phraseService.phrasesByDifficulty(.advanced),
+                        color: .neonPink
+                    )
                 }
                 
                 // Mastery by category
@@ -115,7 +153,10 @@ struct ProgressView: View {
                     ForEach(Category.allCases, id: \.self) { category in
                         CategoryProgressView(
                             category: category,
-                            phrases: phraseService.phrases(for: category)
+                            phrases: phraseService.phrases(for: category),
+                            masteredCount: phraseService.masteredPhrasesByCategory(category),
+                            learningCount: phraseService.learningPhrasesByCategory(category),
+                            newCount: phraseService.newPhrasesByCategory(category)
                         )
                     }
                 }
@@ -212,18 +253,9 @@ struct StatCardView: View {
 struct CategoryProgressView: View {
     let category: Category
     let phrases: [Phrase]
-    
-    var masteredCount: Int {
-        phrases.filter { $0.masteryLevel == .mastered }.count
-    }
-    
-    var learningCount: Int {
-        phrases.filter { $0.masteryLevel == .learning }.count
-    }
-    
-    var newCount: Int {
-        phrases.filter { $0.masteryLevel == .new }.count
-    }
+    let masteredCount: Int
+    let learningCount: Int
+    let newCount: Int
     
     var totalCount: Int {
         phrases.count

@@ -131,6 +131,43 @@ class PhraseService: ObservableObject {
         }
     }
     
+    // Statistics methods
+    func totalPhrases() -> Int {
+        return phrases.count
+    }
+    
+    func masteredPhrases() -> Int {
+        return phrases.filter { $0.masteryLevel == .mastered }.count
+    }
+    
+    func learningPhrases() -> Int {
+        return phrases.filter { $0.masteryLevel == .learning }.count
+    }
+    
+    func newPhrases() -> Int {
+        return phrases.filter { $0.masteryLevel == .new }.count
+    }
+    
+    func favoritePhrasesCount() -> Int {
+        return favoritePhrases().count
+    }
+    
+    func phrasesByDifficulty(_ difficulty: DifficultyLevel) -> Int {
+        return phrases.filter { $0.difficulty == difficulty }.count
+    }
+    
+    func masteredPhrasesByCategory(_ category: Category) -> Int {
+        return phrases.filter { $0.category == category && $0.masteryLevel == .mastered }.count
+    }
+    
+    func learningPhrasesByCategory(_ category: Category) -> Int {
+        return phrases.filter { $0.category == category && $0.masteryLevel == .learning }.count
+    }
+    
+    func newPhrasesByCategory(_ category: Category) -> Int {
+        return phrases.filter { $0.category == category && $0.masteryLevel == .new }.count
+    }
+    
     func exportData() -> Data? {
         return persistenceService.exportData()
     }
