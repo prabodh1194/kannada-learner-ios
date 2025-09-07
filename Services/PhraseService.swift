@@ -7,6 +7,7 @@ class PhraseService: ObservableObject {
     @Published var practiceHistory: [PracticeSession] = []
     @Published var collections: [PhraseCollection] = []
     @Published var reminders: [PracticeReminder] = []
+    @Published var learningGoals: [LearningGoal] = []
     private let persistenceService = PersistenceService()
     private var recentlyPracticedIds: [String] = []
     private var sessionStartDate: Date?
@@ -22,6 +23,7 @@ class PhraseService: ObservableObject {
         loadCollections()
         loadReminders()
         loadPracticeDates()
+        loadLearningGoals()
     }
     
     func loadPhrases() {
@@ -109,6 +111,14 @@ class PhraseService: ObservableObject {
         persistenceService.savePracticeDates(practiceDates)
     }
     
+    func loadLearningGoals() {
+        learningGoals = persistenceService.loadLearningGoals()
+    }
+    
+    func saveLearningGoals() {
+        persistenceService.saveLearningGoals(learningGoals)
+    }
+    
     func addPracticeDate(_ date: Date) {
         // Only add the date if it's not already in the list
         let calendar = Calendar.current
@@ -137,6 +147,35 @@ class PhraseService: ObservableObject {
     func deleteReminder(_ reminder: PracticeReminder) {
         reminders.removeAll(where: { $0.id == reminder.id })
         saveReminders()
+    }
+    
+    func addLearningGoal(_ goal: LearningGoal) {
+        learningGoals.append(goal)
+        saveLearningGoals()
+    }
+    
+    func updateLearningGoal(_ goal: LearningGoal) {
+        if let index = learningGoals.firstIndex(where: { $0.id == goal.id }) {
+            learningGoals[index] = goal
+            saveLearningGoals()
+        }
+    }
+    
+    func deleteLearningGoal(_ goal: LearningGoal) {
+        learningGoals.removeAll(where: { $0.id == goal.id })
+        saveLearningGoals()
+    }
+    
+    func updateLearningGoalProgress() {
+        let masteredCount = masteredPhrases()
+        
+        for i in learningGoals.indices {
+            if !learningGoals[i].completed {
+                learningGoals[i].updateProgress(masteredCount)
+            }
+        }
+        
+        saveLearningGoals()
     }
     
     func startPracticeSession() {
@@ -168,6 +207,9 @@ class PhraseService: ObservableObject {
         
         // Add practice date
         addPracticeDate(startDate)
+        
+        // Update learning goal progress
+        updateLearningGoalProgress()
         
         // Reset session variables
         sessionStartDate = nil
@@ -217,6 +259,9 @@ class PhraseService: ObservableObject {
         if let index = phrases.firstIndex(where: { $0.id == phrase.id }) {
             phrases[index].masteryLevel = level
             savePhrases()
+            
+            // Update learning goal progress when mastery level changes
+            updateLearningGoalProgress()
         }
     }
     
@@ -354,6 +399,20 @@ class PhraseService: ObservableObject {
         return practiceDates
     }
     
+    // Learning goals methods
+    func activeLearningGoals() -> [LearningGoal] {
+        return learningGoals.filter { !$0.completed }
+    }
+    
+    func completedLearningGoals() -> [LearningGoal] {
+        return learningGoals.filter { $0.completed }
+    }
+    
+    func overdueLearningGoals() -> [LearningGoal] {
+        let today = Date()
+        return learningGoals.filter { !$0.completed && $0.deadline < today }
+    }
+    
     func exportData() -> Data? {
         return persistenceService.exportData()
     }
@@ -370,6 +429,7 @@ class PhraseService: ObservableObject {
             loadCollections()
             loadReminders()
             loadPracticeDates()
+            loadLearningGoals()
         }
         return success
     }

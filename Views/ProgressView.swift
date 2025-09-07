@@ -143,6 +143,20 @@ struct ProgressView: View {
                     )
                 }
                 
+                // Active learning goals
+                if !phraseService.activeLearningGoals().isEmpty {
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("Active Learning Goals")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .foregroundColor(.neonGreen)
+                        
+                        ForEach(phraseService.activeLearningGoals()) { goal in
+                            GoalProgressView(goal: goal)
+                        }
+                    }
+                }
+                
                 // Mastery by category
                 VStack(alignment: .leading, spacing: 10) {
                     Text("Mastery by Category")
@@ -173,6 +187,33 @@ struct ProgressView: View {
                             Image(systemName: "calendar.badge.clock")
                                 .foregroundColor(.neonBlue)
                             Text("View Practice Calendar")
+                                .foregroundColor(.neonBlue)
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(.neonBlue)
+                        }
+                        .padding()
+                        .background(Color.darkSurface)
+                        .cornerRadius(12)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(Color.neonBlue, lineWidth: 1)
+                        )
+                    }
+                }
+                
+                // Learning goals button
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("Learning Goals")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .foregroundColor(.neonGreen)
+                    
+                    NavigationLink(destination: LearningGoalsView(phraseService: phraseService)) {
+                        HStack {
+                            Image(systemName: "flag")
+                                .foregroundColor(.neonBlue)
+                            Text("Manage Learning Goals")
                                 .foregroundColor(.neonBlue)
                             Spacer()
                             Image(systemName: "chevron.right")
@@ -274,6 +315,63 @@ struct StatCardView: View {
             RoundedRectangle(cornerRadius: 12)
                 .stroke(color, lineWidth: 1)
         )
+    }
+}
+
+struct GoalProgressView: View {
+    let goal: LearningGoal
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Text(goal.name)
+                    .font(.headline)
+                    .foregroundColor(.neonGreen)
+                Spacer()
+                Text("\(goal.current)/\(goal.target)")
+                    .font(.caption)
+                    .foregroundColor(.textSecondary)
+            }
+            
+            // Progress bar
+            GeometryReader { geometry in
+                ZStack(alignment: .leading) {
+                    Rectangle()
+                        .fill(Color.darkSurface)
+                    
+                    Rectangle()
+                        .fill(goal.completed ? Color.neonGreen : Color.neonBlue)
+                        .frame(width: CGFloat(goal.progressPercentage) / 100 * geometry.size.width)
+                }
+            }
+            .frame(height: 8)
+            .cornerRadius(4)
+            
+            HStack {
+                Text("\(Int(goal.progressPercentage))%")
+                    .font(.caption)
+                    .foregroundColor(.textSecondary)
+                
+                Spacer()
+                
+                Text("Due: \(dateFormatter.string(from: goal.deadline))")
+                    .font(.caption)
+                    .foregroundColor(.textSecondary)
+            }
+        }
+        .padding()
+        .background(Color.darkSurface)
+        .cornerRadius(12)
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(goal.completed ? Color.neonGreen : (goal.deadline < Date() ? Color.neonPink : Color.neonBlue), lineWidth: 1)
+        )
+    }
+    
+    private var dateFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .short
+        return formatter
     }
 }
 

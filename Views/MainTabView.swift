@@ -71,6 +71,12 @@ struct MainTabView: View {
                     Text("Calendar")
                 }
             
+            LearningGoalsView(phraseService: phraseService)
+                .tabItem {
+                    Image(systemName: "flag")
+                    Text("Goals")
+                }
+            
             ProgressView(phraseService: phraseService)
                 .tabItem {
                     Image(systemName: "chart.bar")

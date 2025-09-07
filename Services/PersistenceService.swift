@@ -11,6 +11,7 @@ class PersistenceService {
     private let collectionsKey = "PhraseCollections"
     private let remindersKey = "PracticeReminders"
     private let practiceDatesKey = "PracticeDates"
+    private let learningGoalsKey = "LearningGoals"
     
     func savePhrases(_ phrases: [Phrase]) {
         if let encoded = try? JSONEncoder().encode(phrases) {
@@ -119,6 +120,20 @@ class PersistenceService {
         return timestamps.map { Date(timeIntervalSince1970: $0) }
     }
     
+    func saveLearningGoals(_ goals: [LearningGoal]) {
+        if let encoded = try? JSONEncoder().encode(goals) {
+            userDefaults.set(encoded, forKey: learningGoalsKey)
+        }
+    }
+    
+    func loadLearningGoals() -> [LearningGoal] {
+        if let data = userDefaults.data(forKey: learningGoalsKey),
+           let goals = try? JSONDecoder().decode([LearningGoal].self, from: data) {
+            return goals
+        }
+        return []
+    }
+    
     func exportData() -> Data? {
         var exportDict: [String: Any] = [:]
         
@@ -165,6 +180,12 @@ class PersistenceService {
         let practiceDates = loadPracticeDates()
         if let encodedPracticeDates = try? JSONEncoder().encode(practiceDates) {
             exportDict["practiceDates"] = encodedPracticeDates
+        }
+        
+        // Export learning goals
+        let learningGoals = loadLearningGoals()
+        if let encodedLearningGoals = try? JSONEncoder().encode(learningGoals) {
+            exportDict["learningGoals"] = encodedLearningGoals
         }
         
         // Encode the export dictionary
@@ -222,6 +243,11 @@ class PersistenceService {
                 // Import practice dates
                 if let practiceDatesData = exportDict["practiceDates"] as? Data {
                     userDefaults.set(practiceDatesData, forKey: practiceDatesKey)
+                }
+                
+                // Import learning goals
+                if let learningGoalsData = exportDict["learningGoals"] as? Data {
+                    userDefaults.set(learningGoalsData, forKey: learningGoalsKey)
                 }
                 
                 return true
