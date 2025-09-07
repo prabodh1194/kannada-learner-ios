@@ -28,6 +28,12 @@ struct MainTabView: View {
                     Image(systemName: "chart.bar")
                     Text("Progress")
                 }
+            
+            SettingsView()
+                .tabItem {
+                    Image(systemName: "gear")
+                    Text("Settings")
+                }
         }
         .environmentObject(phraseService)
     }
