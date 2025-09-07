@@ -225,6 +225,17 @@ class PhraseService: ObservableObject {
         return phrases.filter { $0.category == category && $0.masteryLevel == .new }.count
     }
     
+    // Review methods
+    func phrasesNeedingReview() -> [Phrase] {
+        // Return phrases that are new or learning
+        return phrases.filter { $0.masteryLevel == .new || $0.masteryLevel == .learning }
+    }
+    
+    func difficultPhrases() -> [Phrase] {
+        // Return phrases that are new (assuming these are the most difficult)
+        return phrases.filter { $0.masteryLevel == .new }
+    }
+    
     // Daily goal methods
     func setDailyGoal(_ goal: Int) {
         dailyGoal = goal
