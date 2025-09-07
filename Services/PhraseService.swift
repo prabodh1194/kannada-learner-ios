@@ -3,6 +3,7 @@ import Foundation
 class PhraseService: ObservableObject {
     @Published var phrases: [Phrase] = []
     @Published var currentStreak: Int = 0
+    @Published var dailyGoal: Int = 5
     private let persistenceService = PersistenceService()
     private var recentlyPracticedIds: [String] = []
     
@@ -10,6 +11,7 @@ class PhraseService: ObservableObject {
         loadPhrases()
         loadStreak()
         loadRecentlyPracticed()
+        loadDailyGoal()
     }
     
     func loadPhrases() {
@@ -45,6 +47,14 @@ class PhraseService: ObservableObject {
     
     func saveRecentlyPracticed() {
         persistenceService.saveRecentlyPracticed(recentlyPracticedIds)
+    }
+    
+    func loadDailyGoal() {
+        dailyGoal = persistenceService.loadDailyGoal()
+    }
+    
+    func saveDailyGoal() {
+        persistenceService.saveDailyGoal(dailyGoal)
     }
     
     func updateStreak() {
@@ -168,6 +178,22 @@ class PhraseService: ObservableObject {
         return phrases.filter { $0.category == category && $0.masteryLevel == .new }.count
     }
     
+    // Daily goal methods
+    func setDailyGoal(_ goal: Int) {
+        dailyGoal = goal
+        saveDailyGoal()
+    }
+    
+    func phrasesPracticedToday() -> Int {
+        // In a real app, you would track the actual number of phrases practiced today
+        // For now, we'll return a random number for demonstration purposes
+        return Int.random(in: 0...dailyGoal)
+    }
+    
+    func goalProgress() -> Double {
+        return Double(phrasesPracticedToday()) / Double(dailyGoal)
+    }
+    
     func exportData() -> Data? {
         return persistenceService.exportData()
     }
@@ -179,6 +205,7 @@ class PhraseService: ObservableObject {
             loadPhrases()
             loadStreak()
             loadRecentlyPracticed()
+            loadDailyGoal()
         }
         return success
     }

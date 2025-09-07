@@ -35,6 +35,12 @@ struct MainTabView: View {
                     Text("Recent")
                 }
             
+            DailyGoalView(phraseService: phraseService)
+                .tabItem {
+                    Image(systemName: "target")
+                    Text("Goal")
+                }
+            
             ProgressView(phraseService: phraseService)
                 .tabItem {
                     Image(systemName: "chart.bar")

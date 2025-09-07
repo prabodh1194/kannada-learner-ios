@@ -6,6 +6,7 @@ class PersistenceService {
     private let streakKey = "CurrentStreak"
     private let lastPracticeDateKey = "LastPracticeDate"
     private let recentlyPracticedKey = "RecentlyPracticed"
+    private let dailyGoalKey = "DailyGoal"
     
     func savePhrases(_ phrases: [Phrase]) {
         if let encoded = try? JSONEncoder().encode(phrases) {
@@ -49,6 +50,15 @@ class PersistenceService {
         return userDefaults.array(forKey: recentlyPracticedKey) as? [String] ?? []
     }
     
+    func saveDailyGoal(_ goal: Int) {
+        userDefaults.set(goal, forKey: dailyGoalKey)
+    }
+    
+    func loadDailyGoal() -> Int {
+        // Default to 5 phrases per day
+        return userDefaults.integer(forKey: dailyGoalKey) > 0 ? userDefaults.integer(forKey: dailyGoalKey) : 5
+    }
+    
     func exportData() -> Data? {
         var exportDict: [String: Any] = [:]
         
@@ -69,6 +79,9 @@ class PersistenceService {
         
         // Export recently practiced
         exportDict["recentlyPracticed"] = loadRecentlyPracticed()
+        
+        // Export daily goal
+        exportDict["dailyGoal"] = loadDailyGoal()
         
         // Encode the export dictionary
         if let encodedData = try? JSONSerialization.data(withJSONObject: exportDict, options: .prettyPrinted) {
@@ -100,6 +113,11 @@ class PersistenceService {
                 // Import recently practiced
                 if let recentlyPracticed = exportDict["recentlyPracticed"] as? [String] {
                     userDefaults.set(recentlyPracticed, forKey: recentlyPracticedKey)
+                }
+                
+                // Import daily goal
+                if let dailyGoal = exportDict["dailyGoal"] as? Int {
+                    userDefaults.set(dailyGoal, forKey: dailyGoalKey)
                 }
                 
                 return true

@@ -8,6 +8,7 @@ struct PracticeView: View {
     @State private var showingResult = false
     @State private var isCorrect = false
     @State private var hasPracticedToday = false
+    @State private var phrasesPracticed = 0
     
     var body: some View {
         VStack(spacing: 30) {
@@ -23,13 +24,23 @@ struct PracticeView: View {
                     }
                 }
                 
-                // Streak display
+                // Streak and goal display
                 HStack {
-                    Image(systemName: "flame")
-                        .foregroundColor(.neonPink)
-                    Text("Streak: \(phraseService.currentStreak) days")
-                        .fontWeight(.bold)
+                    HStack {
+                        Image(systemName: "flame")
+                            .foregroundColor(.neonPink)
+                        Text("Streak: \(phraseService.currentStreak) days")
+                            .fontWeight(.bold)
+                    }
+                    
                     Spacer()
+                    
+                    HStack {
+                        Image(systemName: "target")
+                            .foregroundColor(.neonGreen)
+                        Text("Today: \(phrasesPracticed)/\(phraseService.dailyGoal)")
+                            .fontWeight(.bold)
+                    }
                 }
                 .padding(.horizontal)
                 
@@ -140,6 +151,7 @@ struct PracticeView: View {
     
     private func nextPhrase() {
         showingResult = false
+        phrasesPracticed += 1
         
         if currentIndex < phrases.count - 1 {
             currentIndex += 1
@@ -147,6 +159,7 @@ struct PracticeView: View {
         } else {
             // Practice session completed
             startPractice()
+            phrasesPracticed = 0
         }
     }
     
