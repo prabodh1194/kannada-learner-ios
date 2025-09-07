@@ -1,8 +1,14 @@
 import SwiftUI
+import AVFoundation
 
 struct PhraseDetailView: View {
     let phrase: Phrase
     @EnvironmentObject var phraseService: PhraseService
+    @StateObject private var audioService = AudioService()
+    @StateObject private var recordingService = RecordingService()
+    @State private var isPlaying = false
+    @State private var isRecording = false
+    @State private var hasPermission = false
     
     var body: some View {
         ScrollView {
@@ -87,18 +93,23 @@ struct PhraseDetailView: View {
                 
                 // Audio playback section
                 VStack(alignment: .leading, spacing: 10) {
-                    Text("Pronunciation")
+                    Text("Pronunciation Practice")
                         .font(.headline)
                         .foregroundColor(.neonBlue)
                     
                     HStack {
                         Button(action: {
-                            // TODO: Implement audio playback
+                            isPlaying.toggle()
+                            if isPlaying {
+                                audioService.playAudio(fileName: phrase.audioFileName)
+                            } else {
+                                audioService.stopAudio()
+                            }
                         }) {
                             HStack {
-                                Image(systemName: "play.circle")
+                                Image(systemName: isPlaying ? "stop.circle" : "play.circle")
                                     .font(.title)
-                                Text("Play")
+                                Text(isPlaying ? "Stop" : "Listen")
                             }
                             .padding()
                             .background(Color.neonGreen)
@@ -107,12 +118,23 @@ struct PhraseDetailView: View {
                         }
                         
                         Button(action: {
-                            // TODO: Implement recording functionality
+                            if !isRecording {
+                                Task {
+                                    hasPermission = await recordingService.requestPermission()
+                                    if hasPermission {
+                                        isRecording = true
+                                        recordingService.startRecording(fileName: "recording_\(phrase.id.uuidString).m4a")
+                                    }
+                                }
+                            } else {
+                                isRecording = false
+                                recordingService.stopRecording()
+                            }
                         }) {
                             HStack {
-                                Image(systemName: "mic.circle")
+                                Image(systemName: isRecording ? "stop.circle" : "mic.circle")
                                     .font(.title)
-                                Text("Record")
+                                Text(isRecording ? "Stop" : "Record")
                             }
                             .padding()
                             .background(Color.neonPink)
