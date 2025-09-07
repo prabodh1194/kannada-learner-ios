@@ -65,6 +65,12 @@ struct MainTabView: View {
                     Text("Reminders")
                 }
             
+            StreakCalendarView(phraseService: phraseService)
+                .tabItem {
+                    Image(systemName: "calendar.badge.clock")
+                    Text("Calendar")
+                }
+            
             ProgressView(phraseService: phraseService)
                 .tabItem {
                     Image(systemName: "chart.bar")

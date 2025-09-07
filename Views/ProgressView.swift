@@ -160,6 +160,33 @@ struct ProgressView: View {
                         )
                     }
                 }
+                
+                // Calendar view button
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("Practice Calendar")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .foregroundColor(.neonGreen)
+                    
+                    NavigationLink(destination: StreakCalendarView(phraseService: phraseService)) {
+                        HStack {
+                            Image(systemName: "calendar.badge.clock")
+                                .foregroundColor(.neonBlue)
+                            Text("View Practice Calendar")
+                                .foregroundColor(.neonBlue)
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(.neonBlue)
+                        }
+                        .padding()
+                        .background(Color.darkSurface)
+                        .cornerRadius(12)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(Color.neonBlue, lineWidth: 1)
+                        )
+                    }
+                }
             }
             .padding()
         }

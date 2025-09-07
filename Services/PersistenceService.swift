@@ -10,6 +10,7 @@ class PersistenceService {
     private let practiceHistoryKey = "PracticeHistory"
     private let collectionsKey = "PhraseCollections"
     private let remindersKey = "PracticeReminders"
+    private let practiceDatesKey = "PracticeDates"
     
     func savePhrases(_ phrases: [Phrase]) {
         if let encoded = try? JSONEncoder().encode(phrases) {
@@ -104,6 +105,20 @@ class PersistenceService {
         return []
     }
     
+    func savePracticeDates(_ dates: [Date]) {
+        // Convert dates to timestamps
+        let timestamps = dates.map { $0.timeIntervalSince1970 }
+        userDefaults.set(timestamps, forKey: practiceDatesKey)
+    }
+    
+    func loadPracticeDates() -> [Date] {
+        // Load timestamps and convert back to dates
+        guard let timestamps = userDefaults.array(forKey: practiceDatesKey) as? [TimeInterval] else {
+            return []
+        }
+        return timestamps.map { Date(timeIntervalSince1970: $0) }
+    }
+    
     func exportData() -> Data? {
         var exportDict: [String: Any] = [:]
         
@@ -144,6 +159,12 @@ class PersistenceService {
         let reminders = loadReminders()
         if let encodedReminders = try? JSONEncoder().encode(reminders) {
             exportDict["reminders"] = encodedReminders
+        }
+        
+        // Export practice dates
+        let practiceDates = loadPracticeDates()
+        if let encodedPracticeDates = try? JSONEncoder().encode(practiceDates) {
+            exportDict["practiceDates"] = encodedPracticeDates
         }
         
         // Encode the export dictionary
@@ -196,6 +217,11 @@ class PersistenceService {
                 // Import reminders
                 if let remindersData = exportDict["reminders"] as? Data {
                     userDefaults.set(remindersData, forKey: remindersKey)
+                }
+                
+                // Import practice dates
+                if let practiceDatesData = exportDict["practiceDates"] as? Data {
+                    userDefaults.set(practiceDatesData, forKey: practiceDatesKey)
                 }
                 
                 return true

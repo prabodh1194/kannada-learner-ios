@@ -11,6 +11,7 @@ class PhraseService: ObservableObject {
     private var recentlyPracticedIds: [String] = []
     private var sessionStartDate: Date?
     private var sessionPhrasesPracticed: Int = 0
+    private var practiceDates: [Date] = []
     
     init() {
         loadPhrases()
@@ -20,6 +21,7 @@ class PhraseService: ObservableObject {
         loadPracticeHistory()
         loadCollections()
         loadReminders()
+        loadPracticeDates()
     }
     
     func loadPhrases() {
@@ -99,6 +101,27 @@ class PhraseService: ObservableObject {
         persistenceService.saveReminders(reminders)
     }
     
+    func loadPracticeDates() {
+        practiceDates = persistenceService.loadPracticeDates()
+    }
+    
+    func savePracticeDates() {
+        persistenceService.savePracticeDates(practiceDates)
+    }
+    
+    func addPracticeDate(_ date: Date) {
+        // Only add the date if it's not already in the list
+        let calendar = Calendar.current
+        let dateExists = practiceDates.contains { existingDate in
+            calendar.isDate(existingDate, inSameDayAs: date)
+        }
+        
+        if !dateExists {
+            practiceDates.append(date)
+            savePracticeDates()
+        }
+    }
+    
     func addReminder(_ reminder: PracticeReminder) {
         reminders.append(reminder)
         saveReminders()
@@ -142,6 +165,9 @@ class PhraseService: ObservableObject {
         
         practiceHistory.append(session)
         savePracticeHistory()
+        
+        // Add practice date
+        addPracticeDate(startDate)
         
         // Reset session variables
         sessionStartDate = nil
@@ -323,6 +349,11 @@ class PhraseService: ObservableObject {
         return Double(phrasesPracticedToday()) / Double(dailyGoal)
     }
     
+    // Practice dates methods
+    func getPracticeDates() -> [Date] {
+        return practiceDates
+    }
+    
     func exportData() -> Data? {
         return persistenceService.exportData()
     }
@@ -338,6 +369,7 @@ class PhraseService: ObservableObject {
             loadPracticeHistory()
             loadCollections()
             loadReminders()
+            loadPracticeDates()
         }
         return success
     }
