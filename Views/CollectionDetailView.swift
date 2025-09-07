@@ -13,6 +13,22 @@ struct CollectionDetailView: View {
         phraseService.phrases(in: collection)
     }
     
+    var masteredCount: Int {
+        phrasesInCollection.filter { $0.masteryLevel == .mastered }.count
+    }
+    
+    var learningCount: Int {
+        phrasesInCollection.filter { $0.masteryLevel == .learning }.count
+    }
+    
+    var newCount: Int {
+        phrasesInCollection.filter { $0.masteryLevel == .new }.count
+    }
+    
+    var masteryPercentage: Double {
+        phrasesInCollection.isEmpty ? 0 : Double(masteredCount) / Double(phrasesInCollection.count) * 100
+    }
+    
     var filteredPhrases: [Phrase] {
         if searchText.isEmpty {
             return phraseService.phrases
@@ -46,6 +62,51 @@ struct CollectionDetailView: View {
                 Text("\(phrasesInCollection.count) phrases")
                     .font(.subheadline)
                     .foregroundColor(.textSecondary)
+                
+                // Progress bar
+                GeometryReader { geometry in
+                    HStack(spacing: 0) {
+                        if masteredCount > 0 {
+                            Rectangle()
+                                .fill(Color.neonGreen)
+                                .frame(width: CGFloat(masteredCount) / CGFloat(phrasesInCollection.count) * geometry.size.width)
+                        }
+                        
+                        if learningCount > 0 {
+                            Rectangle()
+                                .fill(Color.neonBlue)
+                                .frame(width: CGFloat(learningCount) / CGFloat(phrasesInCollection.count) * geometry.size.width)
+                        }
+                        
+                        if newCount > 0 {
+                            Rectangle()
+                                .fill(Color.neonPink)
+                                .frame(width: CGFloat(newCount) / CGFloat(phrasesInCollection.count) * geometry.size.width)
+                        }
+                    }
+                }
+                .frame(height: 10)
+                .cornerRadius(5)
+                
+                // Progress text
+                HStack {
+                    Text("Mastered: \(masteredCount)")
+                        .font(.caption)
+                        .foregroundColor(.neonGreen)
+                    Spacer()
+                    Text("Learning: \(learningCount)")
+                        .font(.caption)
+                        .foregroundColor(.neonBlue)
+                    Spacer()
+                    Text("New: \(newCount)")
+                        .font(.caption)
+                        .foregroundColor(.neonPink)
+                }
+                .font(.caption)
+                
+                Text("Progress: \(String(format: "%.1f", masteryPercentage))%")
+                    .font(.caption)
+                    .foregroundColor(.neonBlue)
             }
             .padding()
             .frame(maxWidth: .infinity, alignment: .leading)
