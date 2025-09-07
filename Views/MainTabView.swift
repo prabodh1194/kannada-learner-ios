@@ -53,6 +53,12 @@ struct MainTabView: View {
                     Text("Review")
                 }
             
+            CollectionsView(phraseService: phraseService)
+                .tabItem {
+                    Image(systemName: "folder")
+                    Text("Collections")
+                }
+            
             ProgressView(phraseService: phraseService)
                 .tabItem {
                     Image(systemName: "chart.bar")

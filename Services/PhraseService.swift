@@ -5,6 +5,7 @@ class PhraseService: ObservableObject {
     @Published var currentStreak: Int = 0
     @Published var dailyGoal: Int = 5
     @Published var practiceHistory: [PracticeSession] = []
+    @Published var collections: [PhraseCollection] = []
     private let persistenceService = PersistenceService()
     private var recentlyPracticedIds: [String] = []
     private var sessionStartDate: Date?
@@ -16,6 +17,7 @@ class PhraseService: ObservableObject {
         loadRecentlyPracticed()
         loadDailyGoal()
         loadPracticeHistory()
+        loadCollections()
     }
     
     func loadPhrases() {
@@ -67,6 +69,14 @@ class PhraseService: ObservableObject {
     
     func savePracticeHistory() {
         persistenceService.savePracticeHistory(practiceHistory)
+    }
+    
+    func loadCollections() {
+        collections = persistenceService.loadCollections()
+    }
+    
+    func saveCollections() {
+        persistenceService.saveCollections(collections)
     }
     
     func startPracticeSession() {
@@ -236,6 +246,30 @@ class PhraseService: ObservableObject {
         return phrases.filter { $0.masteryLevel == .new }
     }
     
+    // Collection methods
+    func addCollection(_ collection: PhraseCollection) {
+        collections.append(collection)
+        saveCollections()
+    }
+    
+    func updateCollection(_ collection: PhraseCollection) {
+        if let index = collections.firstIndex(where: { $0.id == collection.id }) {
+            collections[index] = collection
+            saveCollections()
+        }
+    }
+    
+    func deleteCollection(_ collection: PhraseCollection) {
+        collections.removeAll(where: { $0.id == collection.id })
+        saveCollections()
+    }
+    
+    func phrases(in collection: PhraseCollection) -> [Phrase] {
+        return phrases.filter { phrase in
+            collection.phraseIds.contains(phrase.id.uuidString)
+        }
+    }
+    
     // Daily goal methods
     func setDailyGoal(_ goal: Int) {
         dailyGoal = goal
@@ -265,6 +299,7 @@ class PhraseService: ObservableObject {
             loadRecentlyPracticed()
             loadDailyGoal()
             loadPracticeHistory()
+            loadCollections()
         }
         return success
     }
