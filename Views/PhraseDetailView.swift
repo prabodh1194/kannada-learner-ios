@@ -9,6 +9,7 @@ struct PhraseDetailView: View {
     @State private var isPlaying = false
     @State private var isRecording = false
     @State private var hasPermission = false
+    @State private var scaleAmount: CGFloat = 0.8
     
     var body: some View {
         ScrollView {
@@ -164,6 +165,12 @@ struct PhraseDetailView: View {
                 }
             }
             .padding()
+            .scaleEffect(scaleAmount)
+            .onAppear {
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    scaleAmount = 1.0
+                }
+            }
         }
         .navigationBarTitleDisplayMode(.inline)
     }

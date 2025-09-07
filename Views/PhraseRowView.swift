@@ -3,6 +3,7 @@ import SwiftUI
 struct PhraseRowView: View {
     let phrase: Phrase
     @EnvironmentObject var phraseService: PhraseService
+    @State private var isFavorite = false
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -19,6 +20,8 @@ struct PhraseRowView: View {
                 }) {
                     Image(systemName: phrase.isFavorite ? "heart.fill" : "heart")
                         .foregroundColor(phrase.isFavorite ? .neonPink : .textSecondary)
+                        .scaleEffect(phrase.isFavorite ? 1.2 : 1.0)
+                        .animation(.easeInOut(duration: 0.2), value: phrase.isFavorite)
                 }
             }
             
@@ -69,6 +72,8 @@ struct PhraseRowView: View {
                                 RoundedRectangle(cornerRadius: 8)
                                     .stroke(backgroundColorForMasteryLevel(level), lineWidth: 1)
                             )
+                            .scaleEffect(level == phrase.masteryLevel ? 1.1 : 1.0)
+                            .animation(.easeInOut(duration: 0.2), value: phrase.masteryLevel)
                     }
                 }
             }
@@ -80,6 +85,9 @@ struct PhraseRowView: View {
             RoundedRectangle(cornerRadius: 12)
                 .stroke(Color.neonGreen, lineWidth: 1)
         )
+        .onAppear {
+            isFavorite = phrase.isFavorite
+        }
     }
     
     private func backgroundColorForDifficulty(_ difficulty: DifficultyLevel) -> Color {
