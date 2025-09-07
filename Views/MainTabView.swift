@@ -23,6 +23,12 @@ struct MainTabView: View {
                     Text("Search")
                 }
             
+            PracticeView()
+                .tabItem {
+                    Image(systemName: "brain")
+                    Text("Practice")
+                }
+            
             ProgressView(phraseService: phraseService)
                 .tabItem {
                     Image(systemName: "chart.bar")
