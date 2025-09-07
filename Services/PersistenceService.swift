@@ -5,6 +5,7 @@ class PersistenceService {
     private let phrasesKey = "SavedPhrases"
     private let streakKey = "CurrentStreak"
     private let lastPracticeDateKey = "LastPracticeDate"
+    private let recentlyPracticedKey = "RecentlyPracticed"
     
     func savePhrases(_ phrases: [Phrase]) {
         if let encoded = try? JSONEncoder().encode(phrases) {
@@ -38,5 +39,13 @@ class PersistenceService {
     
     func loadLastPracticeDate() -> Date? {
         return userDefaults.object(forKey: lastPracticeDateKey) as? Date
+    }
+    
+    func saveRecentlyPracticed(_ phraseIds: [String]) {
+        userDefaults.set(phraseIds, forKey: recentlyPracticedKey)
+    }
+    
+    func loadRecentlyPracticed() -> [String] {
+        return userDefaults.array(forKey: recentlyPracticedKey) as? [String] ?? []
     }
 }

@@ -29,6 +29,12 @@ struct MainTabView: View {
                     Text("Practice")
                 }
             
+            RecentlyPracticedView(phraseService: phraseService)
+                .tabItem {
+                    Image(systemName: "clock")
+                    Text("Recent")
+                }
+            
             ProgressView(phraseService: phraseService)
                 .tabItem {
                     Image(systemName: "chart.bar")

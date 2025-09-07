@@ -4,10 +4,12 @@ class PhraseService: ObservableObject {
     @Published var phrases: [Phrase] = []
     @Published var currentStreak: Int = 0
     private let persistenceService = PersistenceService()
+    private var recentlyPracticedIds: [String] = []
     
     init() {
         loadPhrases()
         loadStreak()
+        loadRecentlyPracticed()
     }
     
     func loadPhrases() {
@@ -35,6 +37,14 @@ class PhraseService: ObservableObject {
     
     func saveStreak() {
         persistenceService.saveStreak(currentStreak)
+    }
+    
+    func loadRecentlyPracticed() {
+        recentlyPracticedIds = persistenceService.loadRecentlyPracticed()
+    }
+    
+    func saveRecentlyPracticed() {
+        persistenceService.saveRecentlyPracticed(recentlyPracticedIds)
     }
     
     func updateStreak() {
@@ -87,6 +97,23 @@ class PhraseService: ObservableObject {
         if let index = phrases.firstIndex(where: { $0.id == updatedPhrase.id }) {
             phrases[index] = updatedPhrase
             savePhrases()
+            
+            // Add to recently practiced (limit to 10)
+            let phraseId = updatedPhrase.id.uuidString
+            if !recentlyPracticedIds.contains(phraseId) {
+                recentlyPracticedIds.insert(phraseId, at: 0)
+            } else {
+                // Move to front if already in list
+                recentlyPracticedIds.removeAll(where: { $0 == phraseId })
+                recentlyPracticedIds.insert(phraseId, at: 0)
+            }
+            
+            // Limit to 10 most recent
+            if recentlyPracticedIds.count > 10 {
+                recentlyPracticedIds = Array(recentlyPracticedIds.prefix(10))
+            }
+            
+            saveRecentlyPracticed()
         }
     }
     
@@ -96,5 +123,11 @@ class PhraseService: ObservableObject {
     
     func favoritePhrases() -> [Phrase] {
         return phrases.filter { $0.isFavorite }
+    }
+    
+    func recentlyPracticedPhrases() -> [Phrase] {
+        return recentlyPracticedIds.compactMap { id in
+            phrases.first { $0.id.uuidString == id }
+        }
     }
 }
