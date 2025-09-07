@@ -5,12 +5,16 @@ struct FavoritesView: View {
     
     var body: some View {
         List(phraseService.favoritePhrases()) { phrase in
-            PhraseRowView(phrase: phrase)
+            NavigationLink(destination: PhraseDetailView(phrase: phrase)) {
+                PhraseRowView(phrase: phrase)
+            }
         }
         .navigationTitle("Favorites")
     }
 }
 
 #Preview {
-    FavoritesView(phraseService: PhraseService())
+    NavigationView {
+        FavoritesView(phraseService: PhraseService())
+    }
 }

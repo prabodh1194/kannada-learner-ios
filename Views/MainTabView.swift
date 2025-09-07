@@ -16,6 +16,18 @@ struct MainTabView: View {
                     Image(systemName: "heart")
                     Text("Favorites")
                 }
+            
+            SearchView(phraseService: phraseService)
+                .tabItem {
+                    Image(systemName: "magnifyingglass")
+                    Text("Search")
+                }
+            
+            ProgressView(phraseService: phraseService)
+                .tabItem {
+                    Image(systemName: "chart.bar")
+                    Text("Progress")
+                }
         }
         .environmentObject(phraseService)
     }

@@ -10,12 +10,16 @@ struct CategoryView: View {
     
     var body: some View {
         List(phrases) { phrase in
-            PhraseRowView(phrase: phrase)
+            NavigationLink(destination: PhraseDetailView(phrase: phrase)) {
+                PhraseRowView(phrase: phrase)
+            }
         }
         .navigationTitle(category.rawValue)
     }
 }
 
 #Preview {
-    CategoryView(category: .officeGreetings, phraseService: PhraseService())
+    NavigationView {
+        CategoryView(category: .officeGreetings, phraseService: PhraseService())
+    }
 }

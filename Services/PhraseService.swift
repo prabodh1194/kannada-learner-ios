@@ -30,4 +30,10 @@ class PhraseService: ObservableObject {
     func favoritePhrases() -> [Phrase] {
         return phrases.filter { $0.isFavorite }
     }
+    
+    func updatePhrase(_ updatedPhrase: Phrase) {
+        if let index = phrases.firstIndex(where: { $0.id == updatedPhrase.id }) {
+            phrases[index] = updatedPhrase
+        }
+    }
 }
