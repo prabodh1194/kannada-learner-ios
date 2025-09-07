@@ -5,6 +5,7 @@ struct SamplePhrases {
     static let all: [Phrase] = [
         // Office Greetings
         Phrase(
+            id: UUID(uuidString: "00000000-0000-0000-0000-000000000001")!,
             kannadaText: "ನಮಸ್ಕಾರ",
             englishTranslation: "Hello / Good morning",
             phoneticPronunciation: "Namaskara",
@@ -15,6 +16,7 @@ struct SamplePhrases {
             masteryLevel: .new
         ),
         Phrase(
+            id: UUID(uuidString: "00000000-0000-0000-0000-000000000002")!,
             kannadaText: "ಶುಭೋದಯ",
             englishTranslation: "Good morning",
             phoneticPronunciation: "Shubhodaya",
@@ -25,6 +27,7 @@ struct SamplePhrases {
             masteryLevel: .new
         ),
         Phrase(
+            id: UUID(uuidString: "00000000-0000-0000-0000-000000000003")!,
             kannadaText: "ಶುಭ ಸಂಜೆ",
             englishTranslation: "Good evening",
             phoneticPronunciation: "Shubha Sanje",
@@ -35,6 +38,7 @@ struct SamplePhrases {
             masteryLevel: .new
         ),
         Phrase(
+            id: UUID(uuidString: "00000000-0000-0000-0000-000000000004")!,
             kannadaText: "ಏಗೆ ಇದ್ದೀರಾ?",
             englishTranslation: "How are you?",
             phoneticPronunciation: "Eege iddeera?",
@@ -45,6 +49,7 @@ struct SamplePhrases {
             masteryLevel: .new
         ),
         Phrase(
+            id: UUID(uuidString: "00000000-0000-0000-0000-000000000005")!,
             kannadaText: "ಧನ್ಯವಾದಗಳು",
             englishTranslation: "Thank you",
             phoneticPronunciation: "Dhanyavaadagalu",
@@ -57,6 +62,7 @@ struct SamplePhrases {
         
         // Office Lunch
         Phrase(
+            id: UUID(uuidString: "00000000-0000-0000-0000-000000000006")!,
             kannadaText: "ಊಟಕ್ಕೆ ಹೋಗೋಣ",
             englishTranslation: "Let's go for lunch",
             phoneticPronunciation: "Ootakke hogona",
@@ -67,6 +73,7 @@ struct SamplePhrases {
             masteryLevel: .new
         ),
         Phrase(
+            id: UUID(uuidString: "00000000-0000-0000-0000-000000000007")!,
             kannadaText: "ಇಂದು ಏನು ಊಟವಾಗ್ತೀರಾ?",
             englishTranslation: "What did you have for lunch today?",
             phoneticPronunciation: "Indu enu ootavaagtheera?",
@@ -79,6 +86,7 @@ struct SamplePhrases {
         
         // Shopping
         Phrase(
+            id: UUID(uuidString: "00000000-0000-0000-0000-000000000008")!,
             kannadaText: "ಎಷ್ಟು ಬೆಲೆ?",
             englishTranslation: "How much is the price?",
             phoneticPronunciation: "Eshṭu bele?",
@@ -89,6 +97,7 @@ struct SamplePhrases {
             masteryLevel: .new
         ),
         Phrase(
+            id: UUID(uuidString: "00000000-0000-0000-0000-000000000009")!,
             kannadaText: "ಇದನ್ನು ತೋರಿಸಿ",
             englishTranslation: "Show me this",
             phoneticPronunciation: "Idannu torisi",
@@ -101,6 +110,7 @@ struct SamplePhrases {
         
         // Transportation
         Phrase(
+            id: UUID(uuidString: "00000000-0000-0000-0000-000000000010")!,
             kannadaText: "ಬಸ್ ಸ್ಟಾಪ್ ಎಲ್ಲಿದೆ?",
             englishTranslation: "Where is the bus stop?",
             phoneticPronunciation: "Bus stop yelliade?",
@@ -111,6 +121,7 @@ struct SamplePhrases {
             masteryLevel: .new
         ),
         Phrase(
+            id: UUID(uuidString: "00000000-0000-0000-0000-000000000011")!,
             kannadaText: "ಅಳ್ಳಿಯವರೆಗೆ ಎಷ್ಟು ದೂರ?",
             englishTranslation: "How far is it to the next stop?",
             phoneticPronunciation: "Alliyavarege eshtu doora?",
@@ -123,6 +134,7 @@ struct SamplePhrases {
         
         // Restaurants
         Phrase(
+            id: UUID(uuidString: "00000000-0000-0000-0000-000000000012")!,
             kannadaText: "ಮೆನು ತೋರಿಸಿ",
             englishTranslation: "Show me the menu",
             phoneticPronunciation: "Menu torisi",
@@ -133,6 +145,7 @@ struct SamplePhrases {
             masteryLevel: .new
         ),
         Phrase(
+            id: UUID(uuidString: "00000000-0000-0000-0000-000000000013")!,
             kannadaText: "ನಾನು ವೆಜಿಟೇರಿಯನ್ ಆಗಿದ್ದೇನೆ",
             englishTranslation: "I am vegetarian",
             phoneticPronunciation: "Naanu vegetarian agiddeene",

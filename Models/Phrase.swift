@@ -1,7 +1,7 @@
 import Foundation
 
-struct Phrase: Identifiable, Codable {
-    let id = UUID()
+struct Phrase: Identifiable, Codable, Equatable {
+    let id: UUID
     let kannadaText: String
     let englishTranslation: String
     let phoneticPronunciation: String
@@ -16,5 +16,9 @@ struct Phrase: Identifiable, Codable {
         // In a real app, this would point to the actual audio file
         // For now, we'll return a placeholder
         return "audio/\(audioFileName)"
+    }
+    
+    static func == (lhs: Phrase, rhs: Phrase) -> Bool {
+        return lhs.id == rhs.id
     }
 }
