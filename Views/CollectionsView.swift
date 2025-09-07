@@ -3,6 +3,7 @@ import SwiftUI
 struct CollectionsView: View {
     @ObservedObject var phraseService: PhraseService
     @State private var showingAddCollection = false
+    @State private var showingImportCollection = false
     @State private var newCollectionName = ""
     
     var body: some View {
@@ -36,18 +37,34 @@ struct CollectionsView: View {
                 .onDelete(perform: deleteCollections)
             }
             
-            Button(action: {
-                showingAddCollection = true
-            }) {
-                HStack {
-                    Image(systemName: "plus")
-                    Text("New Collection")
+            HStack {
+                Button(action: {
+                    showingAddCollection = true
+                }) {
+                    HStack {
+                        Image(systemName: "plus")
+                        Text("New Collection")
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.neonGreen)
+                    .foregroundColor(.darkBackground)
+                    .cornerRadius(12)
                 }
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(Color.neonGreen)
-                .foregroundColor(.darkBackground)
-                .cornerRadius(12)
+                
+                Button(action: {
+                    showingImportCollection = true
+                }) {
+                    HStack {
+                        Image(systemName: "square.and.arrow.down")
+                        Text("Import")
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.neonBlue)
+                    .foregroundColor(.darkBackground)
+                    .cornerRadius(12)
+                }
             }
             .padding()
         }
@@ -60,6 +77,9 @@ struct CollectionsView: View {
             }
         } message: {
             Text("Enter a name for your new collection")
+        }
+        .sheet(isPresented: $showingImportCollection) {
+            ImportCollectionView(phraseService: phraseService)
         }
     }
     

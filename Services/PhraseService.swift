@@ -73,6 +73,16 @@ class PhraseService: ObservableObject {
     
     func loadCollections() {
         collections = persistenceService.loadCollections()
+        
+        // If no collections loaded, load sample collections
+        if collections.isEmpty {
+            loadSampleCollections()
+        }
+    }
+    
+    func loadSampleCollections() {
+        collections = SamplePhrases.sampleCollections
+        saveCollections()
     }
     
     func saveCollections() {

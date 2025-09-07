@@ -237,4 +237,32 @@ struct SamplePhrases {
             masteryLevel: .new
         )
     ]
+    
+    // Sample collections
+    static let sampleCollections: [PhraseCollection] = [
+        PhraseCollection(
+            id: UUID(uuidString: "11111111-1111-1111-1111-111111111111")!,
+            name: "Office Essentials",
+            phraseIds: [
+                "00000000-0000-0000-0000-000000000001", // Namaskara
+                "00000000-0000-0000-0000-000000000002", // Shubhodaya
+                "00000000-0000-0000-0000-000000000004", // Eege iddeera?
+                "00000000-0000-0000-0000-000000000005", // Dhanyavaadagalu
+                "00000000-0000-0000-0000-000000000006"  // Ootakke hogona
+            ],
+            createdDate: Date(),
+            updatedDate: Date()
+        ),
+        PhraseCollection(
+            id: UUID(uuidString: "22222222-2222-2222-2222-222222222222")!,
+            name: "Shopping Basics",
+            phraseIds: [
+                "00000000-0000-0000-0000-000000000010", // Eshṭu bele?
+                "00000000-0000-0000-0000-000000000011", // Idannu torisi
+                "00000000-0000-0000-0000-000000000012"  // Naanu idannu khareedisuttene
+            ],
+            createdDate: Date(),
+            updatedDate: Date()
+        )
+    ]
 }

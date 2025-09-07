@@ -5,6 +5,8 @@ struct CollectionDetailView: View {
     @State var collection: PhraseCollection
     @State private var showingAddPhrase = false
     @State private var searchText = ""
+    @State private var showingShareSheet = false
+    @State private var sharedData: Data?
     
     var phrasesInCollection: [Phrase] {
         phraseService.phrases(in: collection)
@@ -26,10 +28,19 @@ struct CollectionDetailView: View {
         VStack {
             // Collection info
             VStack(alignment: .leading, spacing: 8) {
-                Text(collection.name)
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                    .foregroundColor(.neonGreen)
+                HStack {
+                    Text(collection.name)
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+                        .foregroundColor(.neonGreen)
+                    Spacer()
+                    Button(action: {
+                        shareCollection()
+                    }) {
+                        Image(systemName: "square.and.arrow.up")
+                            .foregroundColor(.neonBlue)
+                    }
+                }
                 
                 Text("\(phrasesInCollection.count) phrases")
                     .font(.subheadline)
@@ -87,12 +98,47 @@ struct CollectionDetailView: View {
         .sheet(isPresented: $showingAddPhrase) {
             AddPhraseToCollectionView(phraseService: phraseService, collection: $collection)
         }
+        .sheet(isPresented: $showingShareSheet) {
+            if let data = sharedData {
+                ShareSheet(activityItems: [data])
+            }
+        }
         .navigationTitle(collection.name)
     }
     
     private func removePhrase(_ phrase: Phrase) {
         collection.removePhrase(phrase.id.uuidString)
         phraseService.updateCollection(collection)
+    }
+    
+    private func shareCollection() {
+        // Create a SharedCollection from the current collection
+        let sharedPhrases = phrasesInCollection.map { phrase in
+            SharedCollection.SharedPhrase(
+                kannadaText: phrase.kannadaText,
+                englishTranslation: phrase.englishTranslation,
+                phoneticPronunciation: phrase.phoneticPronunciation,
+                audioFileName: phrase.audioFileName,
+                category: phrase.category.rawValue,
+                difficulty: phrase.difficulty.rawValue
+            )
+        }
+        
+        let sharedCollection = SharedCollection(
+            name: collection.name,
+            phrases: sharedPhrases,
+            createdDate: collection.createdDate,
+            updatedDate: collection.updatedDate
+        )
+        
+        // Encode the shared collection
+        do {
+            let data = try JSONEncoder().encode(sharedCollection)
+            sharedData = data
+            showingShareSheet = true
+        } catch {
+            print("Error encoding shared collection: \(error)")
+        }
     }
 }
 
@@ -166,6 +212,18 @@ struct SearchBar: View {
                 .padding()
         }
     }
+}
+
+// Share sheet implementation for SwiftUI
+struct ShareSheet: UIViewControllerRepresentable {
+    let activityItems: [Any]
+    
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        let controller = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
+        return controller
+    }
+    
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }
 
 #Preview {
