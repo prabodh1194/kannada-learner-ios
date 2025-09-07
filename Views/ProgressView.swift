@@ -26,6 +26,32 @@ struct ProgressView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
+                // Streak display
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("Daily Streak")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .foregroundColor(.neonGreen)
+                    
+                    HStack {
+                        Image(systemName: "flame")
+                            .foregroundColor(.neonPink)
+                            .font(.title)
+                        Text("\(phraseService.currentStreak) days")
+                            .font(.title)
+                            .fontWeight(.bold)
+                            .foregroundColor(.neonPink)
+                        Spacer()
+                    }
+                    .padding()
+                    .background(Color.darkSurface)
+                    .cornerRadius(12)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(Color.neonPink, lineWidth: 1)
+                    )
+                }
+                
                 // Overall progress
                 VStack(alignment: .leading, spacing: 10) {
                     Text("Overall Progress")

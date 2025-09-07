@@ -7,6 +7,7 @@ struct PracticeView: View {
     @State private var phrases: [Phrase] = []
     @State private var showingResult = false
     @State private var isCorrect = false
+    @State private var hasPracticedToday = false
     
     var body: some View {
         VStack(spacing: 30) {
@@ -21,6 +22,16 @@ struct PracticeView: View {
                             .frame(width: 10, height: 10)
                     }
                 }
+                
+                // Streak display
+                HStack {
+                    Image(systemName: "flame")
+                        .foregroundColor(.neonPink)
+                    Text("Streak: \(phraseService.currentStreak) days")
+                        .fontWeight(.bold)
+                    Spacer()
+                }
+                .padding(.horizontal)
                 
                 // Phrase display
                 VStack(spacing: 20) {
@@ -118,6 +129,12 @@ struct PracticeView: View {
         // Set the first phrase
         if !phrases.isEmpty {
             currentPhrase = phrases.first
+        }
+        
+        // Update streak if not already done today
+        if !hasPracticedToday {
+            phraseService.updateStreak()
+            hasPracticedToday = true
         }
     }
     

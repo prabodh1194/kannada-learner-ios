@@ -2,10 +2,12 @@ import Foundation
 
 class PhraseService: ObservableObject {
     @Published var phrases: [Phrase] = []
+    @Published var currentStreak: Int = 0
     private let persistenceService = PersistenceService()
     
     init() {
         loadPhrases()
+        loadStreak()
     }
     
     func loadPhrases() {
@@ -25,6 +27,46 @@ class PhraseService: ObservableObject {
     
     func savePhrases() {
         persistenceService.savePhrases(phrases)
+    }
+    
+    func loadStreak() {
+        currentStreak = persistenceService.loadStreak()
+    }
+    
+    func saveStreak() {
+        persistenceService.saveStreak(currentStreak)
+    }
+    
+    func updateStreak() {
+        let today = Date()
+        if let lastPracticeDate = persistenceService.loadLastPracticeDate() {
+            let calendar = Calendar.current
+            let todayComponents = calendar.dateComponents([.year, .month, .day], from: today)
+            let lastPracticeComponents = calendar.dateComponents([.year, .month, .day], from: lastPracticeDate)
+            
+            // Check if it's the same day
+            if todayComponents == lastPracticeComponents {
+                // Already practiced today, no change to streak
+                return
+            }
+            
+            // Check if it's the next day
+            if let yesterday = calendar.date(byAdding: .day, value: -1, to: today),
+               calendar.isDate(yesterday, inSameDayAs: lastPracticeDate) {
+                // Practiced yesterday, increment streak
+                currentStreak += 1
+            } else {
+                // Missed a day, reset streak
+                currentStreak = 1
+            }
+        } else {
+            // First practice, start streak
+            currentStreak = 1
+        }
+        
+        // Save the streak and today's date
+        saveStreak()
+        persistenceService.saveLastPracticeDate(today)
     }
     
     func toggleFavorite(_ phrase: Phrase) {
