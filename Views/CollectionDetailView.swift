@@ -4,6 +4,7 @@ struct CollectionDetailView: View {
     @ObservedObject var phraseService: PhraseService
     @State var collection: PhraseCollection
     @State private var showingAddPhrase = false
+    @State private var showingPractice = false
     @State private var searchText = ""
     @State private var showingShareSheet = false
     @State private var sharedData: Data?
@@ -79,24 +80,43 @@ struct CollectionDetailView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             
-            // Add phrase button
-            Button(action: {
-                showingAddPhrase = true
-            }) {
-                HStack {
-                    Image(systemName: "plus")
-                    Text("Add Phrases")
+            // Action buttons
+            HStack {
+                Button(action: {
+                    showingAddPhrase = true
+                }) {
+                    HStack {
+                        Image(systemName: "plus")
+                        Text("Add Phrases")
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.neonGreen)
+                    .foregroundColor(.darkBackground)
+                    .cornerRadius(12)
                 }
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(Color.neonGreen)
-                .foregroundColor(.darkBackground)
-                .cornerRadius(12)
+                
+                Button(action: {
+                    showingPractice = true
+                }) {
+                    HStack {
+                        Image(systemName: "play.circle")
+                        Text("Practice")
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.neonBlue)
+                    .foregroundColor(.darkBackground)
+                    .cornerRadius(12)
+                }
             }
             .padding()
         }
         .sheet(isPresented: $showingAddPhrase) {
             AddPhraseToCollectionView(phraseService: phraseService, collection: $collection)
+        }
+        .sheet(isPresented: $showingPractice) {
+            CollectionPracticeView(collection: collection)
         }
         .sheet(isPresented: $showingShareSheet) {
             if let data = sharedData {
