@@ -48,4 +48,66 @@ class PersistenceService {
     func loadRecentlyPracticed() -> [String] {
         return userDefaults.array(forKey: recentlyPracticedKey) as? [String] ?? []
     }
+    
+    func exportData() -> Data? {
+        var exportDict: [String: Any] = [:]
+        
+        // Export phrases
+        if let phrases = loadPhrases() {
+            if let encodedPhrases = try? JSONEncoder().encode(phrases) {
+                exportDict["phrases"] = encodedPhrases
+            }
+        }
+        
+        // Export streak
+        exportDict["streak"] = loadStreak()
+        
+        // Export last practice date
+        if let lastPracticeDate = loadLastPracticeDate() {
+            exportDict["lastPracticeDate"] = lastPracticeDate.timeIntervalSince1970
+        }
+        
+        // Export recently practiced
+        exportDict["recentlyPracticed"] = loadRecentlyPracticed()
+        
+        // Encode the export dictionary
+        if let encodedData = try? JSONSerialization.data(withJSONObject: exportDict, options: .prettyPrinted) {
+            return encodedData
+        }
+        
+        return nil
+    }
+    
+    func importData(_ data: Data) -> Bool {
+        do {
+            if let exportDict = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                // Import phrases
+                if let phrasesData = exportDict["phrases"] as? Data {
+                    userDefaults.set(phrasesData, forKey: phrasesKey)
+                }
+                
+                // Import streak
+                if let streak = exportDict["streak"] as? Int {
+                    userDefaults.set(streak, forKey: streakKey)
+                }
+                
+                // Import last practice date
+                if let lastPracticeTimestamp = exportDict["lastPracticeDate"] as? TimeInterval {
+                    let lastPracticeDate = Date(timeIntervalSince1970: lastPracticeTimestamp)
+                    userDefaults.set(lastPracticeDate, forKey: lastPracticeDateKey)
+                }
+                
+                // Import recently practiced
+                if let recentlyPracticed = exportDict["recentlyPracticed"] as? [String] {
+                    userDefaults.set(recentlyPracticed, forKey: recentlyPracticedKey)
+                }
+                
+                return true
+            }
+        } catch {
+            print("Error importing data: \(error)")
+        }
+        
+        return false
+    }
 }

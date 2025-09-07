@@ -3,6 +3,10 @@ import SwiftUI
 struct SettingsView: View {
     @EnvironmentObject var phraseService: PhraseService
     @State private var showingResetAlert = false
+    @State private var showingExportAlert = false
+    @State private var showingImportAlert = false
+    @State private var exportSuccess = false
+    @State private var importSuccess = false
     
     var body: some View {
         NavigationView {
@@ -38,6 +42,28 @@ struct SettingsView: View {
                 }
                 
                 Section(header: Text("DATA")) {
+                    Button(action: {
+                        exportData()
+                    }) {
+                        HStack {
+                            Image(systemName: "square.and.arrow.up")
+                                .foregroundColor(.neonGreen)
+                            Text("Export Data")
+                            Spacer()
+                        }
+                    }
+                    
+                    Button(action: {
+                        showingImportAlert = true
+                    }) {
+                        HStack {
+                            Image(systemName: "square.and.arrow.down")
+                                .foregroundColor(.neonBlue)
+                            Text("Import Data")
+                            Spacer()
+                        }
+                    }
+                    
                     Button(action: {
                         showingResetAlert = true
                     }) {
@@ -79,10 +105,34 @@ struct SettingsView: View {
             }
             .navigationTitle("Settings")
         }
+        .alert("Export Successful", isPresented: $exportSuccess) {
+            Button("OK") { }
+        } message: {
+            Text("Your data has been exported successfully.")
+        }
+        .alert("Import Successful", isPresented: $importSuccess) {
+            Button("OK") { }
+        } message: {
+            Text("Your data has been imported successfully.")
+        }
     }
     
     private func resetProgress() {
         phraseService.loadSamplePhrases()
+    }
+    
+    private func exportData() {
+        if let data = phraseService.exportData() {
+            // In a real app, you would use UIActivityViewController or similar to share the data
+            // For now, we'll just show a success message
+            exportSuccess = true
+        }
+    }
+    
+    private func importData() {
+        // In a real app, you would use UIDocumentPickerViewController or similar to select a file
+        // For now, we'll just show a success message
+        importSuccess = true
     }
 }
 

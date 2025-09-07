@@ -130,4 +130,19 @@ class PhraseService: ObservableObject {
             phrases.first { $0.id.uuidString == id }
         }
     }
+    
+    func exportData() -> Data? {
+        return persistenceService.exportData()
+    }
+    
+    func importData(_ data: Data) -> Bool {
+        let success = persistenceService.importData(data)
+        if success {
+            // Reload data after import
+            loadPhrases()
+            loadStreak()
+            loadRecentlyPracticed()
+        }
+        return success
+    }
 }
