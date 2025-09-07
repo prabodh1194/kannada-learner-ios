@@ -6,6 +6,7 @@ class PhraseService: ObservableObject {
     @Published var dailyGoal: Int = 5
     @Published var practiceHistory: [PracticeSession] = []
     @Published var collections: [PhraseCollection] = []
+    @Published var reminders: [PracticeReminder] = []
     private let persistenceService = PersistenceService()
     private var recentlyPracticedIds: [String] = []
     private var sessionStartDate: Date?
@@ -18,6 +19,7 @@ class PhraseService: ObservableObject {
         loadDailyGoal()
         loadPracticeHistory()
         loadCollections()
+        loadReminders()
     }
     
     func loadPhrases() {
@@ -87,6 +89,31 @@ class PhraseService: ObservableObject {
     
     func saveCollections() {
         persistenceService.saveCollections(collections)
+    }
+    
+    func loadReminders() {
+        reminders = persistenceService.loadReminders()
+    }
+    
+    func saveReminders() {
+        persistenceService.saveReminders(reminders)
+    }
+    
+    func addReminder(_ reminder: PracticeReminder) {
+        reminders.append(reminder)
+        saveReminders()
+    }
+    
+    func updateReminder(_ reminder: PracticeReminder) {
+        if let index = reminders.firstIndex(where: { $0.id == reminder.id }) {
+            reminders[index] = reminder
+            saveReminders()
+        }
+    }
+    
+    func deleteReminder(_ reminder: PracticeReminder) {
+        reminders.removeAll(where: { $0.id == reminder.id })
+        saveReminders()
     }
     
     func startPracticeSession() {
@@ -310,6 +337,7 @@ class PhraseService: ObservableObject {
             loadDailyGoal()
             loadPracticeHistory()
             loadCollections()
+            loadReminders()
         }
         return success
     }

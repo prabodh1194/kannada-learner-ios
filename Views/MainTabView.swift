@@ -59,6 +59,12 @@ struct MainTabView: View {
                     Text("Collections")
                 }
             
+            RemindersView(phraseService: phraseService)
+                .tabItem {
+                    Image(systemName: "alarm")
+                    Text("Reminders")
+                }
+            
             ProgressView(phraseService: phraseService)
                 .tabItem {
                     Image(systemName: "chart.bar")

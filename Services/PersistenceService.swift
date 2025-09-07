@@ -9,6 +9,7 @@ class PersistenceService {
     private let dailyGoalKey = "DailyGoal"
     private let practiceHistoryKey = "PracticeHistory"
     private let collectionsKey = "PhraseCollections"
+    private let remindersKey = "PracticeReminders"
     
     func savePhrases(_ phrases: [Phrase]) {
         if let encoded = try? JSONEncoder().encode(phrases) {
@@ -89,6 +90,20 @@ class PersistenceService {
         return []
     }
     
+    func saveReminders(_ reminders: [PracticeReminder]) {
+        if let encoded = try? JSONEncoder().encode(reminders) {
+            userDefaults.set(encoded, forKey: remindersKey)
+        }
+    }
+    
+    func loadReminders() -> [PracticeReminder] {
+        if let data = userDefaults.data(forKey: remindersKey),
+           let reminders = try? JSONDecoder().decode([PracticeReminder].self, from: data) {
+            return reminders
+        }
+        return []
+    }
+    
     func exportData() -> Data? {
         var exportDict: [String: Any] = [:]
         
@@ -123,6 +138,12 @@ class PersistenceService {
         let collections = loadCollections()
         if let encodedCollections = try? JSONEncoder().encode(collections) {
             exportDict["collections"] = encodedCollections
+        }
+        
+        // Export reminders
+        let reminders = loadReminders()
+        if let encodedReminders = try? JSONEncoder().encode(reminders) {
+            exportDict["reminders"] = encodedReminders
         }
         
         // Encode the export dictionary
@@ -170,6 +191,11 @@ class PersistenceService {
                 // Import collections
                 if let collectionsData = exportDict["collections"] as? Data {
                     userDefaults.set(collectionsData, forKey: collectionsKey)
+                }
+                
+                // Import reminders
+                if let remindersData = exportDict["reminders"] as? Data {
+                    userDefaults.set(remindersData, forKey: remindersKey)
                 }
                 
                 return true
