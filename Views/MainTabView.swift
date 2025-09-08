@@ -77,6 +77,12 @@ struct MainTabView: View {
                     Text("Goals")
                 }
             
+            SpacedRepetitionView(phraseService: phraseService)
+                .tabItem {
+                    Image(systemName: "arrow.clockwise")
+                    Text("Review")
+                }
+            
             ProgressView(phraseService: phraseService)
                 .tabItem {
                     Image(systemName: "chart.bar")

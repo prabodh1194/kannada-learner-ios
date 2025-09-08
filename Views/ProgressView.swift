@@ -27,6 +27,10 @@ struct ProgressView: View {
         totalPhrases > 0 ? Double(masteredPhrases) / Double(totalPhrases) * 100 : 0
     }
     
+    var dueForReview: Int {
+        phraseService.phrases.filter { $0.isDueForReview }.count
+    }
+    
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
@@ -116,6 +120,12 @@ struct ProgressView: View {
                         title: "Favorites",
                         value: favoritePhrases,
                         color: .neonPink
+                    )
+                    
+                    StatCardView(
+                        title: "Due for Review",
+                        value: dueForReview,
+                        color: .neonBlue
                     )
                     
                     // Difficulty breakdown
@@ -225,6 +235,48 @@ struct ProgressView: View {
                         .overlay(
                             RoundedRectangle(cornerRadius: 12)
                                 .stroke(Color.neonBlue, lineWidth: 1)
+                        )
+                    }
+                }
+                
+                // Spaced repetition info
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("Spaced Repetition")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .foregroundColor(.neonGreen)
+                    
+                    HStack {
+                        Image(systemName: "arrow.clockwise")
+                            .foregroundColor(.neonBlue)
+                        Text("Review phrases at optimal intervals to improve retention")
+                            .foregroundColor(.textSecondary)
+                        Spacer()
+                    }
+                    .padding()
+                    .background(Color.darkSurface)
+                    .cornerRadius(12)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(Color.neonBlue, lineWidth: 1)
+                    )
+                    
+                    NavigationLink(destination: SpacedRepetitionView(phraseService: phraseService)) {
+                        HStack {
+                            Image(systemName: "arrow.clockwise")
+                                .foregroundColor(.neonGreen)
+                            Text("Start Spaced Review")
+                                .foregroundColor(.neonGreen)
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(.neonGreen)
+                        }
+                        .padding()
+                        .background(Color.darkSurface)
+                        .cornerRadius(12)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(Color.neonGreen, lineWidth: 1)
                         )
                     }
                 }
